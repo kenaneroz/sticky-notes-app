@@ -44,13 +44,13 @@ export default function RightBar(props) {
                                 props.handleDelete()
                                 props.setRightBarShow(false)
                             }}
-                        >Delete</button>
+                        >Remove</button>
                     </div>
                 }
-                <IoClose 
+                <button
                     className="cursor-pointer"
                     onClick={() => props.setRightBarShow(false)}
-                />
+                >Close</button>
             </div>
             <div>
                 <textarea

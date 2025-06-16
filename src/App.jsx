@@ -14,10 +14,10 @@ function App() {
     localStorage.setItem('savedTodos', JSON.stringify(todos))
   }, [todos])
    
+  const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
   function newTodo(e, title, content) {
     const date = new Date
     const day = String(date.getDate()).padStart(2, '0')
-    const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
     const month = monthNames[date.getMonth()]
     const year = date.getFullYear()
     const formattedDate = `${month} ${day}, ${year}`
@@ -37,7 +37,12 @@ function App() {
   const [updatingCreating, setUpdatingCreating] = useState('')
 
   function update() {
-    setTodos(olds => olds.map(old => old.id === selected ? {...old, title: rightBarTitle, content: rightBarContent} : old))
+    const date = new Date
+    const day = String(date.getDate()).padStart(2, '0')
+    const month = monthNames[date.getMonth()]
+    const year = date.getFullYear()
+    const updatedDate = `${month} ${day}, ${year}`
+    setTodos(olds => olds.map(old => old.id === selected ? {...old, title: rightBarTitle, content: rightBarContent, date: updatedDate} : old))
   }
 
   function pin(id) {
@@ -136,7 +141,7 @@ function App() {
       {
         todos.length === 0 
         ?
-        <p className='text-gray-100 h-screen w-full flex justify-center items-center'>You haven't added anything yet.</p>
+        <p className={`${mode === 'dark' ? 'text-gray-100' : 'text-gray-700'} h-screen w-full flex justify-center items-center`}>You haven't added anything yet.</p>
         :
         <div className="relative h-screen w-full flex flex-wrap gap-[10px] p-[25px] md:p-[100px] overflow-y-scroll">{stickyNoteElements}</div>
       }
