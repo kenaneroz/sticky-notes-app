@@ -42,7 +42,6 @@ export default function RightBar(props) {
                             className="cursor-pointer" 
                             onClick={() => {
                                 props.handleDelete()
-                                props.setRightBarShow(false)
                             }}
                         >Remove</button>
                     </div>

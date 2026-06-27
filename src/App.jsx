@@ -151,6 +151,20 @@ function App() {
     setConfirmState({ isOpen: false, action: null })
   }
 
+  function handleConfirm() {
+    if (confirmState.action === 'deleteAll') {
+      handleDeleteAll()
+    } else if (confirmState.action === 'deleteOne') {
+      handleDelete()
+      setRightBarShow(false)
+    }
+    setConfirmState({ isOpen: false, action: null })
+  }
+
+  function handleCancel() {
+    setConfirmState({ isOpen: false, action: null })
+  }
+
   return (
     <div className={`${mode === 'dark' ? 'bg-gray-700' : 'bg-gray-100'} md:flex`}>
       <Sidebar 
