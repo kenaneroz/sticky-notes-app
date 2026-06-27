@@ -33,7 +33,7 @@ export default function Sidebar(props) {
             </div>
             <div>
                 <p 
-                    className={`cursor-pointer bg-gray-600 ${props.mode === 'dark' ? 'text-gray-100' : 'text-gray-600'} text-center text-sm rounded-full p-[10px]`}
+                    className="cursor-pointer bg-gray-600 text-gray-100 text-center text-sm rounded-full p-[10px]"
                     onClick={() => {
                         props.handleDeleteAll()
                         props.setRightBarShow(false)

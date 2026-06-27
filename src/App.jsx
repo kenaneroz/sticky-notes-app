@@ -4,6 +4,7 @@ import Sidebar from './components/Sidebar.jsx'
 import { nanoid } from 'nanoid'
 import Todo from './components/Todo.jsx'
 import RightBar from './components/RightBar.jsx'
+import ConfirmModal from './components/ConfirmModal.jsx'
 
 function App() {
   const savedTodos = JSON.parse(localStorage.getItem('savedTodos'))
@@ -106,7 +107,12 @@ function App() {
     />  
   })
 
-  const [mode, setMode] = useState('dark')
+  const savedMode = localStorage.getItem('savedMode')
+  const [mode, setMode] = useState(() => savedMode || 'dark')
+
+  useEffect(() => {
+    localStorage.setItem('savedMode', mode)
+  }, [mode])
   function handleMode(e) {
     if(e.target.id === 'darkModeIcon') setMode('dark')
     else setMode('light')
@@ -122,6 +128,28 @@ function App() {
     setTodos(todos => todos.map(todo => todo.id === selected ? {...todo, isSelected: true} : {...todo, isSelected: false}))
   }, [selected])
 
+  const [confirmState, setConfirmState] = useState({ isOpen: false, action: null })
+
+  function requestDelete() {
+    setConfirmState({ isOpen: true, action: 'deleteOne' })
+  }
+
+  function requestDeleteAll() {
+    setConfirmState({ isOpen: true, action: 'deleteAll' })
+  }
+
+  function handleConfirm() {
+    if (confirmState.action === 'deleteAll') {
+      handleDeleteAll()
+    } else if (confirmState.action === 'deleteOne') {
+      handleDelete()
+    }
+    setConfirmState({ isOpen: false, action: null })
+  }
+
+  function handleCancel() {
+    setConfirmState({ isOpen: false, action: null })
+  }
 
   return (
     <div className={`${mode === 'dark' ? 'bg-gray-700' : 'bg-gray-100'} md:flex`}>
@@ -129,7 +157,7 @@ function App() {
         newTodo={newTodo} 
         mode={mode}
         handleMode={handleMode}
-        handleDeleteAll={handleDeleteAll}
+        handleDeleteAll={requestDeleteAll}
         setRightBarShow={setRightBarShow}
         setRightBarTitle={setRightBarTitle}
         setRightBarContent={setRightBarContent}
@@ -155,10 +183,21 @@ function App() {
         setRightBarContent={setRightBarContent}
         updatingCreating={updatingCreating}
         update={update}
-        handleDelete={handleDelete}
+        handleDelete={requestDelete}
         setBg={setBg} 
         bg={bg} 
         handleTodoBgChange={handleTodoBgChange}
+      />
+
+      <ConfirmModal
+        isOpen={confirmState.isOpen}
+        title="Are you sure?"
+        message={confirmState.action === 'deleteAll' 
+          ? "This will delete all your notes." 
+          : "This note will be permanently deleted."}
+        onConfirm={handleConfirm}
+        onCancel={handleCancel}
+        mode={mode}
       />
     </div>
   )
